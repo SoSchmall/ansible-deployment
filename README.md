@@ -23,6 +23,6 @@ Client1 redirects its requests to Client2, which tries to connect to its remote 
 
 MySQL must allow external connection (bind-address) and must make sure that external hosts are allowed to access wordpress database (not just database permission but also hosts permission which in this case datascientest% --every datascientest host--, which is insecure). Either, the range of ip addresses can be used or a specific one. Note that, in this case, 0.0.0.0 is attributed to bind-address rather than wordpress ip address. This is easier for test purposes. Indeed, wordpress database has the least privileges to run perfectly: SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER,INDEX.
 
-
+Files in group_vars are encrypted using ansible-vault. To decrypt them, use the command ansible-vault decrypt "file-name", with password qwerty
 
 
