@@ -1,14 +1,3 @@
-  # all:
-  #   children:
-  #     production:
-  #       hosts:
-  #         serveurweb1.datascientest.fr:
-  #     mysql_group:
-  #       hosts:
-  #         serveurmysql1.datascientest.fr:
-
-
-
 all:
   children:
     production_wordpress:
