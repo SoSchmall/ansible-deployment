@@ -1,0 +1,5 @@
+---
+# defaults file for nginx
+wp_webserver: nginx
+site_name: "{{ wp_sitename }}"
+wp_sitename: "demo.com"

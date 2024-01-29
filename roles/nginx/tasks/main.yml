@@ -1,0 +1,61 @@
+---
+- name: WordPress | Install php
+  apt:
+    pkg:
+      [
+        "php-fpm",
+      ]
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+
+- name: WordPress | Install nginx
+  apt:
+    pkg: nginx
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+  when: wp_webserver == "nginx"
+  
+# - name: WordPress | Nginx | Determine the PHP FPM socket location
+#   shell: dpkg -l | grep php-fpm  | awk '{print $3}' | grep -o '[0-9]\.[0-9]' | head -n 1
+#   register: "php_ver"
+
+# - name: Start the php{{ php_ver.stdout }} service
+#   service:
+#     name: "php{{ php_ver.stdout }}-fpm"
+#     state: started
+
+- name: Start nginx service
+  service:
+    name: "nginx"
+    state: started
+
+- name: WordPress | Nginx | Copy the virtual host configuration file
+  template:
+    src: "nginx_proxy.j2"
+    dest: "/etc/nginx/sites-available/{{ wp_sitename }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Remove Default NGINX Configuration enabled
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Remove Default NGINX Configuration available
+  file:
+    path: /etc/nginx/sites-available/default
+    state: absent
+
+- name: WordPress | Nginx | Symlink the virtual host configuration file from available sites to enabled sites
+  file:
+    state: link
+    src: "/etc/nginx/sites-available/{{ wp_sitename }}"
+    dest: "/etc/nginx/sites-enabled/{{ wp_sitename }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx

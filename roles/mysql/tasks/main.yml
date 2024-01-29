@@ -1,0 +1,78 @@
+---
+- name: Install mysql-server
+  apt:
+    pkg: mysql-server
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install mariadb-server
+  apt:
+    pkg: mariadb-server
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+  when: ansible_distribution == 'Debian'
+
+# - name: Start MySQL or MariaDB service
+#   service:
+#     name: "{{ 'mariadb' if ansible_distribution == 'Debian' else 'mysql' }}"
+#     state: started
+
+- name: Start MariaDB
+  service:
+    name: mysql
+    state: started
+
+- name: Install dependencies
+  apt:
+    pkg: ["php-mysql", "python3-pymysql"]
+    update_cache: yes
+    cache_valid_time: 86400
+    state: present
+
+- name: Create a mysql database
+  mysql_db:
+    name: "{{ wp_mysql_db }}"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Ensure MySQL user exists for localhost
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ wp_mysql_user }}"
+    password: "{{ wp_mysql_password }}"
+    host: localhost
+    state: present
+
+- name: Rename MySQL user to allow access from any host
+  mysql_query:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    query: "RENAME USER '{{ wp_mysql_user }}'@'localhost' TO '{{ wp_mysql_user }}'@'%';"
+  ignore_errors: yes
+
+- name: Ensure MySQL user has correct password for all hosts
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ wp_mysql_user }}"
+    password: "{{ wp_mysql_password }}"
+    host: '%'
+    state: present
+
+- name: Grant necessary privileges on the WordPress database to the user
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ wp_mysql_user }}"
+    host: '%'
+    priv: "wordpress.*:SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER,INDEX"
+    state: present
+
+- name: Ensure MySQL is listening on all interfaces
+  lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: '^bind-address'
+    line: 'bind-address = 0.0.0.0'
+    state: present
+  notify:
+    - restart mysql

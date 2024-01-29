@@ -1,0 +1,6 @@
+---
+# defaults file for mysql
+wp_mysql_root_password: "root_password"
+wp_mysql_db: "wordpress"
+wp_mysql_user: "datascientest"
+wp_mysql_password: "mysql_pass"

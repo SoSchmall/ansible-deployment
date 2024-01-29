@@ -1,0 +1,22 @@
+  # all:
+  #   children:
+  #     production:
+  #       hosts:
+  #         serveurweb1.datascientest.fr:
+  #     mysql_group:
+  #       hosts:
+  #         serveurmysql1.datascientest.fr:
+
+
+
+all:
+  children:
+    production_wordpress:
+      hosts:
+        serveurweb1.datascientest.fr:
+    production_mysql:
+      hosts:
+        serveurmysql1.datascientest.fr:
+    production_nginx:
+      hosts:
+        serveurnginx1.datascientest.fr:

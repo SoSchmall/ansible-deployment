@@ -1,0 +1,12 @@
+# ---
+# # handlers file for wordpress
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+
+
+- name: restart php7.4-fpm
+  service:
+    name: php7.4-fpm  # Adjust for your PHP version
+    state: restarted
