@@ -1,4 +1,4 @@
-############### Requirements ###############
+## Requirements 
 
 This project is running the following packages version:
 
@@ -10,14 +10,14 @@ ansible:2.12.10
 delegated:4.0.4 from molecule
 docker:2.1.0 from molecule_docker requiring collections: community.docker>=3.0.2 ansible.posix>=1.4.0
 
-############### Introduction ###############
+# Introduction 
 
 The project is running wordpress in a distributed environment using reverse proxy. Ansible is running on a master host to configure its clients:
     -Client1: Nginx behaving as a proxy redirecting to the backend of wordpress
     -Client2: Wordpress
     -Client3: MySQL
 
-############### Configuration ###############
+# Configuration
 
 Client1 redirects its requests to Client2, which tries to connect to its remote database on Client3.
 
