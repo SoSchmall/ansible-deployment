@@ -2,10 +2,10 @@ all:
   children:
     production_wordpress:
       hosts:
-        serveurweb1.datascientest.fr:
+        serveurweb1.now.fr:
     production_mysql:
       hosts:
-        serveurmysql1.datascientest.fr:
+        serveurmysql1.now.fr:
     production_nginx:
       hosts:
-        serveurnginx1.datascientest.fr:
+        serveurnginx1.now.fr:
